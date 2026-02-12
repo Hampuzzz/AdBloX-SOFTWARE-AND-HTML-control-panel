@@ -14,21 +14,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Select Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+      - name: Select latest Xcode
+        run: |
+          # List available Xcode versions and pick the latest
+          ls /Applications/ | grep Xcode
+          XCODE_PATH=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)
+          echo "Using: $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH/Contents/Developer"
+          xcodebuild -version
 
       - name: Install XcodeGen
         run: brew install xcodegen
 
       - name: Generate Xcode project
         working-directory: ios
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          echo "Generated project:"
+          ls -la *.xcodeproj
 
       - name: Build app (unsigned for AltStore sideloading)
         working-directory: ios
         run: |
+          # Find the generated project name
+          PROJECT=$(ls -d *.xcodeproj | head -1)
+          echo "Building project: $PROJECT"
+
+          # List schemes
+          xcodebuild -project "$PROJECT" -list
+
           xcodebuild \
-            -project "AdBloX MESH.xcodeproj" \
+            -project "$PROJECT" \
             -scheme "AdBloX" \
             -configuration Release \
             -sdk iphoneos \
@@ -37,19 +53,19 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
+            DEVELOPMENT_TEAM="" \
             archive
 
       - name: Create IPA from archive
         working-directory: ios
         run: |
-          # Create Payload directory structure
           mkdir -p build/Payload
 
-          # Copy .app from archive into Payload
-          cp -r build/AdBloX.xcarchive/Products/Applications/AdBloX\ MESH.app build/Payload/ 2>/dev/null || \
-          cp -r build/AdBloX.xcarchive/Products/Applications/AdBloX.app build/Payload/
+          # Find the .app in the archive (name may vary)
+          APP_PATH=$(find build/AdBloX.xcarchive/Products -name "*.app" -type d | head -1)
+          echo "Found app: $APP_PATH"
+          cp -r "$APP_PATH" build/Payload/
 
-          # Create IPA (it's just a zip)
           cd build
           zip -r AdBloX-MESH-v1.8.2.ipa Payload/
           echo "IPA created: $(ls -lh AdBloX-MESH-v1.8.2.ipa)"
