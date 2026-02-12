@@ -100,13 +100,13 @@ struct ConnectView: View {
                         }
                     }
                     .buttonStyle(.plain)
-                    .onChange(of: vpn.state) { newState in
+                    .onChange(of: vpn.state, perform: { newState in
                         if case .connecting = newState {
                             pulseAnimation = true
                         } else {
                             pulseAnimation = false
                         }
-                    }
+                    })
 
                     Spacer().frame(height: 40)
 

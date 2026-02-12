@@ -22,7 +22,7 @@ struct DashboardWebView: View {
                         loadFailed: $loadFailed,
                         webView: $webView
                     )
-                    .edgesIgnoringSafeArea(.bottom)
+                    .ignoresSafeArea(.container, edges: .bottom)
 
                     if isLoading {
                         VStack(spacing: 16) {
@@ -56,7 +56,7 @@ struct DashboardWebView: View {
                 }
             }
             // Reload when VPN connects
-            .onChange(of: vpn.state) { newState in
+            .onChange(of: vpn.state, perform: { newState in
                 if newState.isActive {
                     loadFailed = false
                     isLoading = true
@@ -64,7 +64,7 @@ struct DashboardWebView: View {
                         webView?.load(URLRequest(url: url))
                     }
                 }
-            }
+            })
         }
     }
 

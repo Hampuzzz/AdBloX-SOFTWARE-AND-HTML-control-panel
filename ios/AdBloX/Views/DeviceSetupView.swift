@@ -182,10 +182,10 @@ struct DeviceSetupView: View {
             .sheet(isPresented: $showScanner) {
                 QRScannerSheet(result: $scanResult)
             }
-            .onChange(of: scanResult) { newValue in
+            .onChange(of: scanResult, perform: { newValue in
                 guard let code = newValue else { return }
                 handleScanResult(code)
-            }
+            })
         }
     }
 
@@ -246,7 +246,7 @@ struct QRScannerSheet: View {
                         .foregroundColor(.adbloxCyan)
                 }
             }
-            .onChange(of: result) { _ in dismiss() }
+            .onChange(of: result, perform: { _ in dismiss() })
         }
     }
 }
