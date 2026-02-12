@@ -119,7 +119,7 @@ class VPNManager: ObservableObject {
     /// Or just an IP address: 100.64.0.1
     func parseEnrollment(_ input: String) -> (ip: String, name: String, key: String)? {
         // Plain IP address
-        if input.matches(of: /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/).count > 0 {
+        if input.range(of: "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$", options: .regularExpression) != nil {
             return (ip: input, name: "AdBloX Device", key: "")
         }
 

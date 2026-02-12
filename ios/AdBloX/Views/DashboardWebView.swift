@@ -191,8 +191,8 @@ struct AdBloXWebView: UIViewRepresentable {
         }
 
         // Allow loading HTTP (the AdBloX device is on a local/mesh network)
-        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
-            return .allow
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            decisionHandler(.allow)
         }
     }
 }
