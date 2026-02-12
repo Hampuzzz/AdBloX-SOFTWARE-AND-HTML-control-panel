@@ -2,40 +2,57 @@ import SwiftUI
 
 @main
 struct AdBloXApp: App {
-    @StateObject private var tailscale = TailscaleManager()
-    @StateObject private var dnsFilter = DNSFilterService()
+    @StateObject private var vpn = VPNManager()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(tailscale)
-                .environmentObject(dnsFilter)
+            RootView()
+                .environmentObject(vpn)
                 .preferredColorScheme(.dark)
+                .onAppear { configureAppearance() }
         }
+    }
+
+    private func configureAppearance() {
+        let tabBar = UITabBarAppearance()
+        tabBar.configureWithOpaqueBackground()
+        tabBar.backgroundColor = UIColor(red: 10/255, green: 10/255, blue: 10/255, alpha: 1)
+        UITabBar.appearance().standardAppearance = tabBar
+        UITabBar.appearance().scrollEdgeAppearance = tabBar
+
+        let navBar = UINavigationBarAppearance()
+        navBar.configureWithOpaqueBackground()
+        navBar.backgroundColor = UIColor(red: 10/255, green: 10/255, blue: 10/255, alpha: 1)
+        navBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        UINavigationBar.appearance().standardAppearance = navBar
+        UINavigationBar.appearance().scrollEdgeAppearance = navBar
     }
 }
 
-struct ContentView: View {
-    @EnvironmentObject var tailscale: TailscaleManager
+/// Root: 4 tabs — Connect (like Tailscale main), Dashboard (WebView into device),
+/// Nodes (mesh peers), Settings
+struct RootView: View {
+    @EnvironmentObject var vpn: VPNManager
 
     var body: some View {
         TabView {
-            DashboardView()
+            ConnectView()
+                .tabItem {
+                    Image(systemName: "power")
+                    Text("Connect")
+                }
+
+            DashboardWebView()
                 .tabItem {
                     Image(systemName: "shield.checkmark.fill")
                     Text("Dashboard")
                 }
 
-            DevicesView()
+            NodesView()
                 .tabItem {
-                    Image(systemName: "laptopcomputer.and.iphone")
-                    Text("Devices")
-                }
-
-            WebDashboardView()
-                .tabItem {
-                    Image(systemName: "globe")
-                    Text("Web Panel")
+                    Image(systemName: "network")
+                    Text("Nodes")
                 }
 
             SettingsView()
@@ -44,13 +61,6 @@ struct ContentView: View {
                     Text("Settings")
                 }
         }
-        .accentColor(Color.adbloxPrimary)
-        .onAppear {
-            let tabBarAppearance = UITabBarAppearance()
-            tabBarAppearance.configureWithOpaqueBackground()
-            tabBarAppearance.backgroundColor = UIColor(Color.adbloxBackground)
-            UITabBar.appearance().standardAppearance = tabBarAppearance
-            UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
-        }
+        .accentColor(.adbloxCyan)
     }
 }

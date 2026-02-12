@@ -1,129 +1,189 @@
 import SwiftUI
 
+/// Settings: VPN configuration, device info, about.
 struct SettingsView: View {
-    @EnvironmentObject var tailscale: TailscaleManager
-    @EnvironmentObject var dnsFilter: DNSFilterService
+    @EnvironmentObject var vpn: VPNManager
+    @State private var showSetup = false
+    @State private var showResetConfirm = false
 
     var body: some View {
         NavigationView {
             List {
-                // VPN Connection
+                // Connection
                 Section {
+                    // VPN status
                     HStack {
-                        Image(systemName: "network")
-                            .foregroundColor(.adbloxPrimary)
+                        settingIcon("bolt.fill", color: .adbloxCyan)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("VPN Connection")
+                            Text("VPN Tunnel")
                                 .font(.subheadline)
                                 .foregroundColor(.white)
-                            Text(tailscale.status.rawValue)
+                            Text(vpn.state.label)
                                 .font(.caption)
-                                .foregroundColor(tailscale.isConnected ? .adbloxSuccess : .adbloxTextMuted)
+                                .foregroundColor(vpn.state.isActive ? .adbloxGreen : .adbloxMuted)
                         }
                         Spacer()
                         Toggle("", isOn: Binding(
-                            get: { tailscale.isConnected },
-                            set: { $0 ? tailscale.connect() : tailscale.disconnect() }
+                            get: { vpn.state.isActive },
+                            set: { $0 ? vpn.connect() : vpn.disconnect() }
                         ))
-                        .tint(.adbloxPrimary)
+                        .tint(.adbloxCyan)
                         .labelsHidden()
                     }
+                } header: {
+                    Text("Connection")
+                }
 
+                // Device
+                Section {
+                    if !vpn.deviceIP.isEmpty {
+                        HStack {
+                            settingIcon("server.rack", color: .adbloxCyan)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(vpn.deviceName.isEmpty ? "AdBloX Device" : vpn.deviceName)
+                                    .font(.subheadline)
+                                    .foregroundColor(.white)
+                                Text(vpn.deviceIP)
+                                    .font(.system(.caption, design: .monospaced))
+                                    .foregroundColor(.adbloxMuted)
+                            }
+                            Spacer()
+                            Button("Change") { showSetup = true }
+                                .font(.caption)
+                                .foregroundColor(.adbloxCyan)
+                        }
+                    } else {
+                        Button(action: { showSetup = true }) {
+                            HStack {
+                                settingIcon("plus.circle.fill", color: .adbloxCyan)
+                                Text("Set Up Device")
+                                    .font(.subheadline)
+                                    .foregroundColor(.adbloxCyan)
+                            }
+                        }
+                    }
+
+                    // DNS routing info
                     HStack {
-                        Image(systemName: "shield.checkmark.fill")
-                            .foregroundColor(.adbloxPrimary)
+                        settingIcon("shield.checkmark.fill", color: .adbloxGreen)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("DNS Filtering")
                                 .font(.subheadline)
                                 .foregroundColor(.white)
-                            Text(dnsFilter.isActive ? "Active" : "Inactive")
+                            Text("All DNS queries route through your AdBloX device when connected")
                                 .font(.caption)
-                                .foregroundColor(dnsFilter.isActive ? .adbloxSuccess : .adbloxTextMuted)
+                                .foregroundColor(.adbloxMuted)
                         }
-                        Spacer()
-                        Toggle("", isOn: Binding(
-                            get: { dnsFilter.isActive },
-                            set: { $0 ? dnsFilter.activate() : dnsFilter.deactivate() }
-                        ))
-                        .tint(.adbloxPrimary)
-                        .labelsHidden()
                     }
                 } header: {
-                    Text("Protection")
+                    Text("AdBloX Device")
                 }
 
-                // Mesh Info
-                Section {
-                    infoRow("Mesh IP", tailscale.meshIP, "globe")
-                    infoRow("Peers", "\(tailscale.peerCount) devices", "laptopcomputer.and.iphone")
-                    infoRow("Server", "mesh.adblox.se", "server.rack")
-                } header: {
-                    Text("Mesh Network")
-                }
-
-                // Blocklist sync
-                Section {
-                    HStack {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .foregroundColor(.adbloxPrimary)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Sync Blocklists")
-                                .font(.subheadline)
-                                .foregroundColor(.white)
-                            if let lastSync = dnsFilter.lastSync {
-                                Text("Last sync: \(lastSync, style: .relative) ago")
-                                    .font(.caption)
-                                    .foregroundColor(.adbloxTextMuted)
+                // Network info (when connected)
+                if vpn.state.isActive {
+                    Section {
+                        infoRow("Device IP", vpn.deviceIP, "globe")
+                        infoRow("Mesh Nodes", "\(vpn.nodes.count + 1)", "network")
+                        if let since = vpn.connectedSince {
+                            HStack {
+                                settingIcon("clock.fill", color: .adbloxOrange)
+                                Text("Connected")
+                                    .font(.subheadline)
+                                    .foregroundColor(.white)
+                                Spacer()
+                                Text(since, style: .relative)
+                                    .font(.system(.caption, design: .monospaced))
+                                    .foregroundColor(.adbloxMuted)
                             }
                         }
-                        Spacer()
-                        Button("Sync") {
-                            dnsFilter.syncBlocklists()
+                    } header: {
+                        Text("Network")
+                    }
+                }
+
+                // AltStore info
+                Section {
+                    HStack {
+                        settingIcon("arrow.triangle.2.circlepath", color: .adbloxOrange)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("AltStore Refresh")
+                                .font(.subheadline)
+                                .foregroundColor(.white)
+                            Text("Keep AltServer running to auto-refresh every 7 days")
+                                .font(.caption)
+                                .foregroundColor(.adbloxMuted)
                         }
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundColor(.adbloxPrimary)
                     }
                 } header: {
-                    Text("Data")
+                    Text("Distribution")
                 }
 
                 // About
                 Section {
                     infoRow("Version", "1.8.2 Pro", "info.circle")
-                    infoRow("Build", "2026.02", "hammer")
-
-                    Link(destination: URL(string: "https://adblox.se")!) {
-                        HStack {
-                            Image(systemName: "globe")
-                                .foregroundColor(.adbloxPrimary)
-                            Text("adblox.se")
-                                .font(.subheadline)
-                                .foregroundColor(.adbloxPrimary)
-                        }
-                    }
+                    infoRow("Build", "2026.02.12", "hammer")
+                    infoRow("Platform", "iOS \(UIDevice.current.systemVersion)", "iphone")
                 } header: {
                     Text("About")
                 }
+
+                // Danger zone
+                Section {
+                    Button(action: { showResetConfirm = true }) {
+                        HStack {
+                            settingIcon("trash.fill", color: .adbloxRed)
+                            Text("Reset Configuration")
+                                .font(.subheadline)
+                                .foregroundColor(.adbloxRed)
+                        }
+                    }
+                } header: {
+                    Text("Advanced")
+                }
             }
             .scrollContentBackground(.hidden)
-            .background(Color.adbloxBackground)
+            .background(Color.adbloxBg)
             .navigationTitle("Settings")
+            .sheet(isPresented: $showSetup) {
+                DeviceSetupView()
+            }
+            .alert("Reset Configuration?", isPresented: $showResetConfirm) {
+                Button("Reset", role: .destructive) {
+                    vpn.disconnect()
+                    UserDefaults.standard.removeObject(forKey: "adblox_device_ip")
+                    UserDefaults.standard.removeObject(forKey: "adblox_device_name")
+                    UserDefaults.standard.removeObject(forKey: "adblox_auth_key")
+                    UserDefaults.standard.removeObject(forKey: "has_configured")
+                    vpn.configureDevice(ip: "", name: "")
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This will remove the configured device and disconnect the VPN.")
+            }
         }
+    }
+
+    // MARK: - Helpers
+
+    private func settingIcon(_ name: String, color: Color) -> some View {
+        Image(systemName: name)
+            .font(.system(size: 14))
+            .foregroundColor(color)
+            .frame(width: 28, height: 28)
+            .background(color.opacity(0.15))
+            .cornerRadius(6)
     }
 
     private func infoRow(_ label: String, _ value: String, _ icon: String) -> some View {
         HStack {
-            Image(systemName: icon)
-                .foregroundColor(.adbloxPrimary)
+            settingIcon(icon, color: .adbloxCyan)
             Text(label)
                 .font(.subheadline)
                 .foregroundColor(.white)
             Spacer()
             Text(value)
-                .font(.subheadline)
-                .fontDesign(.monospaced)
-                .foregroundColor(.adbloxTextMuted)
+                .font(.system(.caption, design: .monospaced))
+                .foregroundColor(.adbloxMuted)
         }
     }
 }

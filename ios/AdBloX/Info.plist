@@ -32,5 +32,33 @@
 	<string>AdBloX needs camera access to scan QR codes for device enrollment.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+
+	<!-- Allow HTTP to local/mesh IPs (AdBloX device dashboard) -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+	</dict>
+
+	<!-- URL scheme: adblox://connect?ip=...&name=...&key=... -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>adblox</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>se.adblox.mesh</string>
+		</dict>
+	</array>
+
+	<!-- Background modes for VPN -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>network-authentication</string>
+	</array>
 </dict>
 </plist>

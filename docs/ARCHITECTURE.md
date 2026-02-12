@@ -1,58 +1,66 @@
-# AdBloX MESH — Architecture
+# AdBloX MESH iOS — Architecture
 
-## System Overview
+## How It Works
 
 ```
-                    ┌─────────────────────────┐
-                    │    mesh.adblox.se        │
-                    │    (Web Dashboard)       │
-                    │    HTML/CSS/JS           │
-                    └───────────┬──────────────┘
-                                │ REST API
-                    ┌───────────┴──────────────┐
-                    │    AdBloX Service         │
-                    │    (Linux daemon)         │
-                    │    DNS Filtering Engine   │
-                    └───────────┬──────────────┘
-                                │ Tailscale Mesh VPN
-            ┌───────────────────┼───────────────────┐
-            │                   │                   │
-    ┌───────┴───────┐   ┌───────┴───────┐   ┌──────┴────────┐
-    │  iOS App      │   │  Android App  │   │  Desktop      │
-    │  SwiftUI +    │   │  Tailscale    │   │  Tailscale    │
-    │  Network Ext  │   │  Fork         │   │  Client       │
-    └───────────────┘   └───────────────┘   └───────────────┘
+┌─────────────────────────────────────────────────┐
+│  iPhone                                         │
+│                                                 │
+│  AdBloX MESH App (SwiftUI)                      │
+│  ├── ConnectView      → Big power button        │
+│  ├── DashboardWebView → WKWebView to device     │
+│  ├── NodesView        → Mesh peer list          │
+│  └── SettingsView     → VPN config              │
+│                                                 │
+│  VPNManager (NETunnelProviderManager)            │
+│  └── Establishes VPN tunnel to AdBloX device    │
+│                                                 │
+│  AdBloXNetworkExtension (separate process)       │
+│  ├── PacketTunnelProvider → DNS interception     │
+│  └── DNSResolver → blocklist matching            │
+│                                                 │
+└────────────────────┬────────────────────────────┘
+                     │ VPN Tunnel
+                     │ (all DNS traffic)
+                     v
+┌─────────────────────────────────────────────────┐
+│  AdBloX Device (Raspberry Pi / Linux server)     │
+│                                                 │
+│  adblox service (systemd)                        │
+│  ├── DNS filtering engine                        │
+│  ├── Web dashboard (HTTP)                        │
+│  ├── Tailscale mesh VPN                          │
+│  └── adblox-watchdog (keeps it running)          │
+│                                                 │
+└─────────────────────────────────────────────────┘
 ```
 
-## Components
+## App Flow
 
-### 1. Web Dashboard (`dashboard/`)
-- Static HTML/CSS/JS served at mesh.adblox.se
-- No build tools or frameworks
-- Communicates with AdBloX backend via REST API
-- Falls back to mock JSON data when no backend detected
+1. **First launch**: User scans QR code or enters AdBloX device IP
+2. **Connect**: VPN tunnel established via `NETunnelProviderManager`
+3. **DNS routing**: All DNS queries from iPhone → through tunnel → AdBloX device
+4. **Ad blocking**: AdBloX device checks queries against blocklists, returns 0.0.0.0 for blocked domains
+5. **Dashboard access**: WebView loads `http://[device-ip]` through the tunnel
 
-### 2. iOS App (`ios/`)
-- **Main App Target** (`AdBloX/`): SwiftUI app with MVVM architecture
-  - `TailscaleManager`: Manages VPN via NETunnelProviderManager
-  - `APIClient`: REST client to mesh.adblox.se
-  - `DNSFilterService`: Coordinates with Network Extension
-- **Network Extension** (`AdBloXNetworkExtension/`): Separate process
-  - `PacketTunnelProvider`: Intercepts DNS queries
-  - `DNSResolver`: Blocklist lookup and response generation
-  - Shares data with main app via App Group container
+## Key Files
 
-### 3. AdBloX Service (Linux)
-- Runs as systemd service (`adblox.service`)
-- Watchdog process (`adblox-watchdog.service`)
-- Rules guard to prevent filter tampering
-- Configured via `adblox.yaml`
-- Tailscale integration for mesh connectivity
+| File | Purpose |
+|------|---------|
+| `VPNManager.swift` | Core VPN logic — connect, disconnect, status monitoring, device configuration |
+| `ConnectView.swift` | Main UI — power button, traffic stats, connection status |
+| `DashboardWebView.swift` | WKWebView that loads device dashboard when connected |
+| `DeviceSetupView.swift` | QR scanner + manual IP entry for initial setup |
+| `NodesView.swift` | List of mesh peers (like Tailscale's device list) |
+| `PacketTunnelProvider.swift` | Network Extension: intercepts and filters DNS |
+| `DNSResolver.swift` | Blocklist lookup, creates blocked DNS responses |
 
-## Data Flow
+## Distribution
 
-1. Device joins mesh via QR code (Tailscale auth key)
-2. All DNS queries route through AdBloX service
-3. Service checks against blocklists, blocks matching domains
-4. Stats and logs sent to dashboard via REST API
-5. iOS Network Extension provides local DNS filtering as fallback
+Distributed via **AltStore** (sideloading):
+- Built as IPA in Xcode
+- Installed via AltStore on iPhone
+- Auto-refreshes every 7 days via AltServer
+- No App Store or developer account needed (free Apple ID works)
+
+See [ALTSTORE.md](ALTSTORE.md) for installation instructions.
