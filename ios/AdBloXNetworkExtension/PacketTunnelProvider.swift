@@ -10,7 +10,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     private var dnsResolver: DNSResolver!
     private let appGroupID = "group.se.adblox.mesh"
 
-    override func startTunnel(options: [String: Any]?, completionHandler: @escaping (Error?) -> Void) {
+    override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
         // Initialize DNS resolver with cached blocklists from App Group
         dnsResolver = DNSResolver(appGroupID: appGroupID)
         dnsResolver.loadBlocklists()
