@@ -1,0 +1,61 @@
+name: AdBloX MESH
+options:
+  bundleIdPrefix: se.adblox
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    TARGETED_DEVICE_FAMILY: "1,2"
+    MARKETING_VERSION: "1.8.2"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_IDENTITY: ""
+    CODE_SIGNING_REQUIRED: "NO"
+    CODE_SIGNING_ALLOWED: "NO"
+
+targets:
+  AdBloX:
+    type: application
+    platform: iOS
+    sources:
+      - path: AdBloX
+    info:
+      path: AdBloX/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: se.adblox.mesh
+        INFOPLIST_FILE: AdBloX/Info.plist
+        CODE_SIGN_ENTITLEMENTS: AdBloX/AdBloX.entitlements
+    entitlements:
+      path: AdBloX/AdBloX.entitlements
+      properties:
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.security.application-groups:
+          - group.se.adblox.mesh
+    dependencies:
+      - target: AdBloXNetworkExtension
+
+  AdBloXNetworkExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: AdBloXNetworkExtension
+    info:
+      path: AdBloXNetworkExtension/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: se.adblox.mesh.tunnel
+        INFOPLIST_FILE: AdBloXNetworkExtension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: AdBloXNetworkExtension/AdBloXNetworkExtension.entitlements
+    entitlements:
+      path: AdBloXNetworkExtension/AdBloXNetworkExtension.entitlements
+      properties:
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.security.application-groups:
+          - group.se.adblox.mesh

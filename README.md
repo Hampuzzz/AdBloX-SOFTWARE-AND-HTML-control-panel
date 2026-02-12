@@ -21,15 +21,25 @@ AdBloX Device (Raspberry Pi / Linux)
 3. **Nodes** — See all devices on the mesh network
 4. **Settings** — Configure device IP, view connection stats
 
+## Get the IPA (No Mac Needed)
+
+The IPA builds automatically via GitHub Actions on every push:
+
+1. Go to **Actions** tab in this repo
+2. Click the latest **Build AdBloX MESH IPA** run
+3. Download the **AdBloX-MESH-IPA** artifact
+4. Unzip — you get `AdBloX-MESH-v1.8.2.ipa`
+
+Or trigger a build manually: Actions > Build AdBloX MESH IPA > Run workflow
+
 ## Install via AltStore
 
 See [docs/ALTSTORE.md](docs/ALTSTORE.md) for full instructions.
 
-**Quick version:**
-1. Build IPA in Xcode (Product > Archive > Ad Hoc)
-2. AirDrop or transfer IPA to iPhone
-3. Open in AltStore — it signs and installs automatically
-4. Refreshes every 7 days while AltServer runs on your computer
+1. Transfer the `.ipa` to your iPhone (AirDrop, email, iCloud Drive)
+2. Open the file on iPhone, choose "Open in AltStore"
+3. AltStore signs and installs it
+4. Refreshes automatically every 7 days
 
 ## App Structure
 

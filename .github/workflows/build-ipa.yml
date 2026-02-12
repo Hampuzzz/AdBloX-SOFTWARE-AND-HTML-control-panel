@@ -1,0 +1,81 @@
+name: Build AdBloX MESH IPA
+
+on:
+  push:
+    branches: [main, claude/*]
+  workflow_dispatch:  # Manual trigger from GitHub UI
+
+jobs:
+  build:
+    name: Build IPA
+    runs-on: macos-14  # Apple Silicon runner with Xcode 15+
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: Build app (unsigned for AltStore sideloading)
+        working-directory: ios
+        run: |
+          xcodebuild \
+            -project "AdBloX MESH.xcodeproj" \
+            -scheme "AdBloX" \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -archivePath build/AdBloX.xcarchive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            archive
+
+      - name: Create IPA from archive
+        working-directory: ios
+        run: |
+          # Create Payload directory structure
+          mkdir -p build/Payload
+
+          # Copy .app from archive into Payload
+          cp -r build/AdBloX.xcarchive/Products/Applications/AdBloX\ MESH.app build/Payload/ 2>/dev/null || \
+          cp -r build/AdBloX.xcarchive/Products/Applications/AdBloX.app build/Payload/
+
+          # Create IPA (it's just a zip)
+          cd build
+          zip -r AdBloX-MESH-v1.8.2.ipa Payload/
+          echo "IPA created: $(ls -lh AdBloX-MESH-v1.8.2.ipa)"
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AdBloX-MESH-IPA
+          path: ios/build/AdBloX-MESH-v1.8.2.ipa
+          if-no-files-found: error
+
+      - name: Create release (on main branch only)
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.8.2-ios
+          name: AdBloX MESH v1.8.2 (iOS)
+          body: |
+            ## AdBloX MESH iOS App
+
+            Install via AltStore:
+            1. Download `AdBloX-MESH-v1.8.2.ipa` below
+            2. AirDrop or transfer to your iPhone
+            3. Open in AltStore
+
+            See [ALTSTORE.md](docs/ALTSTORE.md) for detailed instructions.
+          files: ios/build/AdBloX-MESH-v1.8.2.ipa
+          draft: false
+          prerelease: false

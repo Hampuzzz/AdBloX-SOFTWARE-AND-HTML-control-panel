@@ -5,10 +5,22 @@ AltStore lets you install apps on your iPhone without the App Store. The app ref
 ## Prerequisites
 
 - iPhone running iOS 16.0 or later
-- Mac or Windows PC on the same Wi-Fi network
+- Mac or Windows PC on the same Wi-Fi network (for AltServer)
 - Apple ID (free works, no developer account needed)
+- No Mac needed to build — the IPA builds automatically via GitHub Actions
 
-## Step 1: Install AltServer on your computer
+## Step 1: Download the IPA
+
+**Option A — From GitHub Actions (automated, no Mac needed):**
+1. Go to the repo's **Actions** tab on GitHub
+2. Click the latest **Build AdBloX MESH IPA** workflow run
+3. Scroll down to **Artifacts** and download **AdBloX-MESH-IPA**
+4. Unzip the download — you get `AdBloX-MESH-v1.8.2.ipa`
+
+**Option B — From Releases:**
+- If a release exists, download `AdBloX-MESH-v1.8.2.ipa` from the Releases page
+
+## Step 2: Install AltServer on your computer
 
 **Mac:**
 1. Download AltServer from https://altstore.io
@@ -21,7 +33,7 @@ AltStore lets you install apps on your iPhone without the App Store. The app ref
 3. Install iCloud for Windows from Apple (NOT from Microsoft Store)
 4. AltServer appears in the system tray
 
-## Step 2: Install AltStore on your iPhone
+## Step 3: Install AltStore on your iPhone
 
 1. Connect iPhone to computer via USB
 2. Trust the computer on your iPhone if prompted
@@ -30,42 +42,10 @@ AltStore lets you install apps on your iPhone without the App Store. The app ref
 5. AltStore appears on your iPhone home screen
 6. On iPhone: Settings > General > VPN & Device Management > Trust your Apple ID
 
-## Step 3: Build the AdBloX MESH IPA
+## Step 4: Install the IPA via AltStore
 
-On a Mac with Xcode 15+ installed:
-
-1. Create a new Xcode project:
-   - File > New > Project > iOS > App
-   - Product Name: `AdBloX MESH`
-   - Bundle ID: `se.adblox.mesh`
-   - Interface: SwiftUI, Language: Swift
-
-2. Copy the source files from this repo:
-   - Replace auto-generated files with contents of `ios/AdBloX/`
-   - Delete the auto-generated ContentView.swift
-
-3. Add Network Extension target:
-   - File > New > Target > Network Extension (Packet Tunnel)
-   - Product Name: `AdBloXNetworkExtension`
-   - Copy files from `ios/AdBloXNetworkExtension/`
-
-4. Configure signing:
-   - Select AdBloX target > Signing & Capabilities
-   - Team: Your Apple ID
-   - Add capability: Network Extensions (Packet Tunnel)
-   - Add capability: App Groups > `group.se.adblox.mesh`
-   - Repeat for the Network Extension target
-
-5. Build the IPA:
-   - Set device to "Any iOS Device (arm64)"
-   - Product > Archive
-   - Distribute App > Ad Hoc > Export
-   - This creates `AdBloX MESH.ipa`
-
-## Step 4: Install via AltStore
-
-**Option A — AirDrop the IPA:**
-1. AirDrop the `.ipa` file to your iPhone
+**Option A — AirDrop:**
+1. AirDrop the `.ipa` file from your computer to your iPhone
 2. Open the file, choose "Open in AltStore"
 3. AltStore signs and installs it
 
@@ -73,6 +53,11 @@ On a Mac with Xcode 15+ installed:
 1. Connect iPhone via USB
 2. In AltServer menu: Install App > Select the `.ipa`
 3. App installs on your iPhone
+
+**Option C — Via iCloud Drive / Files:**
+1. Put the `.ipa` in your iCloud Drive
+2. On iPhone, open the Files app
+3. Tap the `.ipa` file > "Open in AltStore"
 
 ## Step 5: First Launch
 
