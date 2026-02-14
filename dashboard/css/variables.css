@@ -1,0 +1,40 @@
+:root {
+    /* Background */
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #111111;
+    --bg-card: #161616;
+    --bg-card-hover: #1a1a1a;
+    --bg-input: #1e1e1e;
+    --bg-sidebar: #0e0e0e;
+
+    /* Accent */
+    --cyan: #00d4ff;
+    --cyan-dim: rgba(0, 212, 255, 0.15);
+    --cyan-glow: rgba(0, 212, 255, 0.25);
+    --green: #00e676;
+    --green-dim: rgba(0, 230, 118, 0.15);
+    --orange: #ff9100;
+    --orange-dim: rgba(255, 145, 0, 0.15);
+    --red: #ff5252;
+    --red-dim: rgba(255, 82, 82, 0.15);
+    --purple: #b388ff;
+    --purple-dim: rgba(179, 136, 255, 0.15);
+
+    /* Text */
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --text-muted: #666666;
+
+    /* Border */
+    --border: #222222;
+    --border-light: #2a2a2a;
+
+    /* Layout */
+    --sidebar-width: 240px;
+    --topbar-height: 56px;
+    --radius: 12px;
+    --radius-sm: 8px;
+
+    /* Transitions */
+    --transition: 0.2s ease;
+}

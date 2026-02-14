@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdBloX — Dashboard</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .chart-container {
+            position: relative;
+            height: 220px;
+            margin-top: 8px;
+        }
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <path d="M16 2L4 8v8c0 7.7 5.1 14.9 12 16 6.9-1.1 12-8.3 12-16V8L16 2z" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" stroke-width="1.5"/>
+                    <path d="M13 16l2 2 4-4" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="sidebar-brand-text">AdBloX</span>
+                <span class="sidebar-version" id="sidebar-version"></span>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-label">Main</div>
+                    <a href="index.html" class="sidebar-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                        Overview
+                    </a>
+                    <a href="devices.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+                        Devices
+                    </a>
+                    <a href="querylog.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                        Query Log
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-label">Filtering</div>
+                    <a href="blocklists.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        Blocklists
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-label">System</div>
+                    <a href="settings.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <span id="sidebar-footer-version"></span>
+            </div>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- Main Content -->
+        <main class="main">
+            <header class="topbar">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <button class="mobile-menu-btn" id="mobile-menu-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    </button>
+                    <h1 class="topbar-title">Overview</h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="badge badge-green"><span class="badge-dot"></span> Online</span>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <!-- Stats Grid -->
+                <div class="grid grid-4 section">
+                    <div class="stat-card">
+                        <div class="stat-icon cyan">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-label">Total Queries</div>
+                            <div class="stat-value" id="stat-queries">48,291</div>
+                            <div class="stat-sub">Last 24 hours</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-label">Blocked</div>
+                            <div class="stat-value" id="stat-blocked">12,847</div>
+                            <div class="stat-sub" id="stat-percent">26.6% of all queries</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-label">Devices</div>
+                            <div class="stat-value" id="stat-devices">6</div>
+                            <div class="stat-sub">On mesh network</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-label">Uptime</div>
+                            <div class="stat-value" id="stat-uptime">14d 7h</div>
+                            <div class="stat-sub">Since last restart</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-2 section">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Queries — 24h</span>
+                            <span class="badge badge-cyan">Live</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-queries"></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Block Ratio</span>
+                            <span class="badge badge-red">26.6%</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-blocked"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features + Activity Row -->
+                <div class="grid grid-2 section">
+                    <!-- Active Features -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Active Features</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:12px">
+                            <div class="feature-card" style="border:none;padding:12px;background:var(--bg-secondary)">
+                                <div class="feature-icon" style="background:var(--red-dim);color:var(--red)">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M21.8 13.1l-1.3-1.3C21.5 10.6 22 9.3 22 8c0-3.3-2.7-6-6-6-1.3 0-2.6.5-3.8 1.5L11 2.2c-.4-.4-1-.4-1.4 0L2.2 9.6c-.4.4-.4 1 0 1.4l1.3 1.3C2.5 13.4 2 14.7 2 16c0 3.3 2.7 6 6 6 1.3 0 2.6-.5 3.8-1.5l1.2 1.3c.4.4 1 .4 1.4 0l7.4-7.4c.4-.4.4-1 0-1.3z"/></svg>
+                                </div>
+                                <div class="feature-info">
+                                    <div class="feature-name">YouTube Ad Blocking</div>
+                                    <div class="feature-desc">Server-side ad injection filtering</div>
+                                </div>
+                                <span class="feature-version" id="feature-yt-version"></span>
+                            </div>
+                            <div class="feature-card" style="border:none;padding:12px;background:var(--bg-secondary)">
+                                <div class="feature-icon" style="background:var(--green-dim);color:var(--green)">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                                </div>
+                                <div class="feature-info">
+                                    <div class="feature-name">Malware Protection</div>
+                                    <div class="feature-desc">Real-time threat domain blocking</div>
+                                </div>
+                                <span class="badge badge-green">Active</span>
+                            </div>
+                            <div class="feature-card" style="border:none;padding:12px;background:var(--bg-secondary)">
+                                <div class="feature-icon" style="background:var(--cyan-dim);color:var(--cyan)">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+                                </div>
+                                <div class="feature-info">
+                                    <div class="feature-name">Mesh Network</div>
+                                    <div class="feature-desc">Tailscale encrypted tunnel</div>
+                                </div>
+                                <span class="badge badge-green">Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Recent Activity</span>
+                            <a href="querylog.html" style="font-size:0.75rem">View all</a>
+                        </div>
+                        <div id="activity-list">
+                            <div class="activity-item">
+                                <span class="activity-dot" style="background:var(--green)"></span>
+                                <span class="activity-domain">dns.google</span>
+                                <span class="badge badge-green badge-sm">Allowed</span>
+                                <span class="activity-time">2s ago</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-dot" style="background:var(--red)"></span>
+                                <span class="activity-domain">ads.doubleclick.net</span>
+                                <span class="badge badge-red badge-sm">Blocked</span>
+                                <span class="activity-time">5s ago</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-dot" style="background:var(--red)"></span>
+                                <span class="activity-domain">tracker.facebook.com</span>
+                                <span class="badge badge-red badge-sm">Blocked</span>
+                                <span class="activity-time">8s ago</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-dot" style="background:var(--green)"></span>
+                                <span class="activity-domain">api.github.com</span>
+                                <span class="badge badge-green badge-sm">Allowed</span>
+                                <span class="activity-time">12s ago</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-dot" style="background:var(--red)"></span>
+                                <span class="activity-domain">googleads.g.doubleclick.net</span>
+                                <span class="badge badge-red badge-sm">Blocked</span>
+                                <span class="activity-time">15s ago</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-dot" style="background:var(--green)"></span>
+                                <span class="activity-domain">cdn.jsdelivr.net</span>
+                                <span class="badge badge-green badge-sm">Allowed</span>
+                                <span class="activity-time">18s ago</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-dot" style="background:var(--red)"></span>
+                                <span class="activity-domain">ad.youtube.com</span>
+                                <span class="badge badge-red badge-sm">Blocked</span>
+                                <span class="activity-time">21s ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/charts.js"></script>
+</body>
+</html>

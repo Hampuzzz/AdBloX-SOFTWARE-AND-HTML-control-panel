@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdBloX — Devices</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 32 32" fill="none"><path d="M16 2L4 8v8c0 7.7 5.1 14.9 12 16 6.9-1.1 12-8.3 12-16V8L16 2z" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" stroke-width="1.5"/><path d="M13 16l2 2 4-4" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="sidebar-brand-text">AdBloX</span>
+                <span class="sidebar-version" id="sidebar-version"></span>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-label">Main</div>
+                    <a href="index.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                        Overview
+                    </a>
+                    <a href="devices.html" class="sidebar-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+                        Devices
+                    </a>
+                    <a href="querylog.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                        Query Log
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-label">Filtering</div>
+                    <a href="blocklists.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        Blocklists
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-label">System</div>
+                    <a href="settings.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <span id="sidebar-footer-version"></span>
+            </div>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <main class="main">
+            <header class="topbar">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <button class="mobile-menu-btn" id="mobile-menu-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    </button>
+                    <h1 class="topbar-title">Devices</h1>
+                </div>
+                <div class="topbar-actions">
+                    <button class="btn btn-primary btn-sm">+ Add Device</button>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <div class="grid grid-3 section">
+                    <div class="card">
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+                            <div class="stat-icon cyan">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-weight:600;font-size:0.9rem">AdBloX Server</div>
+                                <div style="font-size:0.72rem;color:var(--text-muted)">Raspberry Pi 4</div>
+                            </div>
+                            <span class="badge badge-green" style="margin-left:auto"><span class="badge-dot"></span> Online</span>
+                        </div>
+                        <div class="settings-row" style="padding-top:0">
+                            <span class="settings-label" style="font-size:0.75rem;color:var(--text-muted)">IP Address</span>
+                            <span class="settings-value">100.64.0.1</span>
+                        </div>
+                        <div class="settings-row">
+                            <span class="settings-label" style="font-size:0.75rem;color:var(--text-muted)">Queries</span>
+                            <span class="settings-value">48,291</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+                            <div class="stat-icon green">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-weight:600;font-size:0.9rem">iPhone 15 Pro</div>
+                                <div style="font-size:0.72rem;color:var(--text-muted)">iOS 18.3</div>
+                            </div>
+                            <span class="badge badge-green" style="margin-left:auto"><span class="badge-dot"></span> Online</span>
+                        </div>
+                        <div class="settings-row" style="padding-top:0">
+                            <span class="settings-label" style="font-size:0.75rem;color:var(--text-muted)">IP Address</span>
+                            <span class="settings-value">100.64.0.2</span>
+                        </div>
+                        <div class="settings-row">
+                            <span class="settings-label" style="font-size:0.75rem;color:var(--text-muted)">Queries</span>
+                            <span class="settings-value">12,450</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+                            <div class="stat-icon orange">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-weight:600;font-size:0.9rem">MacBook Pro</div>
+                                <div style="font-size:0.72rem;color:var(--text-muted)">macOS 15.3</div>
+                            </div>
+                            <span class="badge badge-green" style="margin-left:auto"><span class="badge-dot"></span> Online</span>
+                        </div>
+                        <div class="settings-row" style="padding-top:0">
+                            <span class="settings-label" style="font-size:0.75rem;color:var(--text-muted)">IP Address</span>
+                            <span class="settings-value">100.64.0.3</span>
+                        </div>
+                        <div class="settings-row">
+                            <span class="settings-label" style="font-size:0.75rem;color:var(--text-muted)">Queries</span>
+                            <span class="settings-value">18,734</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdBloX — Settings</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .update-hero {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .update-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            background: var(--green-dim);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .update-icon svg {
+            width: 32px;
+            height: 32px;
+            color: var(--green);
+        }
+        .update-version-big {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .update-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <svg viewBox="0 0 32 32" fill="none"><path d="M16 2L4 8v8c0 7.7 5.1 14.9 12 16 6.9-1.1 12-8.3 12-16V8L16 2z" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" stroke-width="1.5"/><path d="M13 16l2 2 4-4" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="sidebar-brand-text">AdBloX</span>
+                <span class="sidebar-version" id="sidebar-version"></span>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-label">Main</div>
+                    <a href="index.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                        Overview
+                    </a>
+                    <a href="devices.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+                        Devices
+                    </a>
+                    <a href="querylog.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                        Query Log
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-label">Filtering</div>
+                    <a href="blocklists.html" class="sidebar-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        Blocklists
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-label">System</div>
+                    <a href="settings.html" class="sidebar-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+            <div class="sidebar-footer"><span id="sidebar-footer-version"></span></div>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <main class="main">
+            <header class="topbar">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <button class="mobile-menu-btn" id="mobile-menu-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    </button>
+                    <h1 class="topbar-title">Settings</h1>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <div class="tab active" data-tab="general">General</div>
+                    <div class="tab" data-tab="dns">DNS</div>
+                    <div class="tab" data-tab="network">Network</div>
+                    <div class="tab" data-tab="update">Update</div>
+                    <div class="tab" data-tab="about">About</div>
+                </div>
+
+                <!-- General Tab -->
+                <div class="tab-content active" id="tab-general">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">General Settings</span>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">Auto-start on boot</div>
+                                <div class="settings-sublabel">Start AdBloX service when device powers on</div>
+                            </div>
+                            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">Watchdog</div>
+                                <div class="settings-sublabel">Auto-restart service if it crashes</div>
+                            </div>
+                            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">Rules Guard</div>
+                                <div class="settings-sublabel">Prevent blocklist tampering</div>
+                            </div>
+                            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">Query Logging</div>
+                                <div class="settings-sublabel">Log all DNS queries for the dashboard</div>
+                            </div>
+                            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DNS Tab -->
+                <div class="tab-content" id="tab-dns">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Upstream DNS</span>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">Primary DNS</div>
+                                <div class="settings-sublabel">Upstream resolver for allowed queries</div>
+                            </div>
+                            <span class="settings-value">1.1.1.1 (Cloudflare)</span>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">Secondary DNS</div>
+                                <div class="settings-sublabel">Fallback resolver</div>
+                            </div>
+                            <span class="settings-value">8.8.8.8 (Google)</span>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">DNSSEC Validation</div>
+                                <div class="settings-sublabel">Verify DNS response authenticity</div>
+                            </div>
+                            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">DNS-over-HTTPS</div>
+                                <div class="settings-sublabel">Encrypt upstream DNS queries</div>
+                            </div>
+                            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Network Tab -->
+                <div class="tab-content" id="tab-network">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Mesh Network</span>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">Tailscale Status</div>
+                                <div class="settings-sublabel">Mesh VPN connection</div>
+                            </div>
+                            <span class="badge badge-green"><span class="badge-dot"></span> Connected</span>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">Mesh IP</div>
+                            </div>
+                            <span class="settings-value">100.64.0.1</span>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">Hostname</div>
+                            </div>
+                            <span class="settings-value">adblox-server</span>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label">Connected Peers</div>
+                            </div>
+                            <span class="settings-value">5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Tab -->
+                <div class="tab-content" id="tab-update">
+                    <div class="card">
+                        <div class="update-hero">
+                            <div class="update-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                            </div>
+                            <div class="update-version-big" id="update-version-large"></div>
+                            <div class="update-label">You are running the latest version</div>
+                        </div>
+                        <div style="border-top:1px solid var(--border);padding-top:16px">
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Current Version</div>
+                                </div>
+                                <span class="settings-value" id="update-version"></span>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Build Date</div>
+                                </div>
+                                <span class="settings-value" id="settings-build"></span>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Auto-Update</div>
+                                    <div class="settings-sublabel">Automatically install updates when available</div>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Update Channel</div>
+                                    <div class="settings-sublabel">Which release channel to follow</div>
+                                </div>
+                                <select style="width:120px">
+                                    <option>Stable</option>
+                                    <option>Beta</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin-top:16px;text-align:center">
+                            <button class="btn btn-primary">Check for Updates</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Tab -->
+                <div class="tab-content" id="tab-about">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">About AdBloX</span>
+                        </div>
+                        <div class="settings-row">
+                            <div><div class="settings-label">Version</div></div>
+                            <span class="settings-value" id="settings-version"></span>
+                        </div>
+                        <div class="settings-row">
+                            <div><div class="settings-label">Build Date</div></div>
+                            <span class="settings-value" data-version="build-date"></span>
+                        </div>
+                        <div class="settings-row">
+                            <div><div class="settings-label">Platform</div></div>
+                            <span class="settings-value">Linux (arm64)</span>
+                        </div>
+                        <div class="settings-row">
+                            <div><div class="settings-label">License</div></div>
+                            <span class="settings-value">BSD 3-Clause</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Inject build date into About tab's data-version element
+        document.querySelectorAll('[data-version="build-date"]').forEach(el => {
+            el.textContent = ADBLOX_CONFIG.buildDate;
+        });
+    </script>
+</body>
+</html>
