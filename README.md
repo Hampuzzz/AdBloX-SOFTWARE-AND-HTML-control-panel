@@ -28,7 +28,7 @@ The IPA builds automatically via GitHub Actions on every push:
 1. Go to **Actions** tab in this repo
 2. Click the latest **Build AdBloX MESH IPA** run
 3. Download the **AdBloX-MESH-IPA** artifact
-4. Unzip — you get `AdBloX-MESH-v1.8.2.ipa`
+4. Unzip — you get `AdBloX-MESH-v1.9.3.ipa`
 
 Or trigger a build manually: Actions > Build AdBloX MESH IPA > Run workflow
 

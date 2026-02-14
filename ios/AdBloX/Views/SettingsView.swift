@@ -120,7 +120,7 @@ struct SettingsView: View {
 
                 // About
                 Section {
-                    infoRow("Version", "1.8.2 Pro", "info.circle")
+                    infoRow("Version", "\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0") Pro", "info.circle")
                     infoRow("Build", "2026.02.12", "hammer")
                     infoRow("Platform", "iOS \(UIDevice.current.systemVersion)", "iphone")
                 } header: {

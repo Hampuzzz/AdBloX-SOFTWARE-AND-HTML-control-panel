@@ -126,7 +126,7 @@ struct ConnectView: View {
                         Image(systemName: "shield.checkmark.fill")
                             .font(.system(size: 16))
                             .foregroundColor(.adbloxCyan.opacity(0.4))
-                        Text("AdBloX MESH v1.8.2")
+                        Text("AdBloX MESH v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0")")
                             .font(.caption2)
                             .foregroundColor(.adbloxMuted.opacity(0.5))
                     }

@@ -15,10 +15,10 @@ AltStore lets you install apps on your iPhone without the App Store. The app ref
 1. Go to the repo's **Actions** tab on GitHub
 2. Click the latest **Build AdBloX MESH IPA** workflow run
 3. Scroll down to **Artifacts** and download **AdBloX-MESH-IPA**
-4. Unzip the download — you get `AdBloX-MESH-v1.8.2.ipa`
+4. Unzip the download — you get `AdBloX-MESH-v1.9.3.ipa`
 
 **Option B — From Releases:**
-- If a release exists, download `AdBloX-MESH-v1.8.2.ipa` from the Releases page
+- If a release exists, download `AdBloX-MESH-v1.9.3.ipa` from the Releases page
 
 ## Step 2: Install AltServer on your computer
 
